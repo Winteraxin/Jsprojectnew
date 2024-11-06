@@ -1,0 +1,36 @@
+import requests
+from bs4 import BeautifulSoup
+
+# Function to scrape data from a webpage
+def scrape_website(url):
+    try:
+        # Send a GET request to the URL
+        response = requests.get(url)
+        response.raise_for_status()  # Check for HTTP request errors
+
+        # Parse HTML content with BeautifulSoup
+        soup = BeautifulSoup(response.text, 'html.parser')
+
+        # Example: Scraping titles (modify the selector to match target structure)
+        titles = soup.find_all('h2')  # Adjust tag/selector as needed
+        for i, title in enumerate(titles, start=1):
+            print(f"Title {i}: {title.get_text(strip=True)}")
+
+        # Example: Scraping links
+        links = soup.find_all('a', href=True)
+        for i, link in enumerate(links, start=1):
+            print(f"Link {i}: {link['href']} - Text: {link.get_text(strip=True)}")
+
+        # Example: Scraping images
+        images = soup.find_all('img', src=True)
+        for i, img in enumerate(images, start=1):
+            print(f"Image {i}: {img['src']}")
+
+        # Further data parsing can go here...
+
+    except requests.exceptions.RequestException as e:
+        print(f"Error fetching the webpage: {e}")
+
+# URL to scrape
+url = 'https://example.com'  # Replace with your target URL
+scrape_website(url)
